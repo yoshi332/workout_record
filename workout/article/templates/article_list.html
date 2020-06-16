@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}投稿一覧{% endblock %}
+
+{% block activate_article_list %}active{% endblock %}
+
+{% block header%}
+<style type="text/css">
+  a {color:blue;}
+  </style>
+{% endblock %}
+
+{% block contents %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      {% if user.is_authenticated %}
+        <a href="{% url 'article:article_create' %}">投稿を作成する</a>
+        
+      {% else %}
+       <p>記事を投稿するには、<a href="{% url 'account_login' %}">ログイン</a>が必要です。</p>
+      {% endif %}
+
+        {% for article in article_list %}
+        <div class="post-preview">
+         
+          <a href="{% url 'article:article_detail' article.pk %}">
+            <h2 class="post-title">
+              {{ article.title }}
+            </h2>
+            <h3 class="post-subtitle">
+              {{ article.content | truncatechars:30 }}
+            </h3>
+          </a>
+          <p class="post-meta">{{ article.created_at }}</p>
+        </div>
+        <hr>
+  
+        {% empty %}
+        <p>まだ記事がありません。記事を投稿しましょう！</p>
+
+      </div></div></div>
+        {% endfor %}
+    
+        <!--ページネーション機能-->
+        {% if is_paginated %}
+        <div class="clearfix">
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+          <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+          <span aria-hidden="true">&laquo;</span></a>
+        </li>
+        {% endif %}
+        <!--ページ数の表示-->
+      {% for page_num in page_obj.paginator.page_range %}
+      {% if page_obj.number == page_num %}
+      <li class="page-item">
+        <a class="page-link" href="#">{{ page_num }}</a>
+      </li>
+
+      {% else %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_num }}"></a></li>
+      {% endif %}
+      {% endfor %}
+
+      <!--次のページに移行-->
+      {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-item" href="?page={{ page_obj.next_page_number }}">
+        <span aria-hidden="true">&raquo;</span>
+      </a></li>
+      {% endif %}
+      </ul>
+      </div>
+      {% endif %}
+
+    
+      
+
+{% endblock %}

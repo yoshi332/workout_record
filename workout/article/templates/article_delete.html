@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}投稿一覧{% endblock %}
+
+{% block activate_article_list %}active{% endblock %}
+
+
+{% block header %}
+<link href="{% static 'css/ajast.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block contents %}
+<div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <form method="POST">
+            {% csrf_token %}
+            <p>記事を削除してもいいですか？</p>
+            <button class="btn btn-primary" type="submit">削除する</button>
+
+            </form>
+</div></div></div>
+{% endblock %}
+

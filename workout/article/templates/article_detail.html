@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title%}記事の詳細{% endblock %}
+
+{% block contents %}
+
+<article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+
+{% if article.photo %}
+<p><img src="{{ article.photo.url }}" width="250" height="250"></p>
+{% endif %}
+
+<div>
+    <h2 class="section-heading">{{ article.title }}</h2>
+</div>
+
+<div>
+    {{ article.content | linebreaksbr }}
+
+    
+</div>
+
+<div>
+    <strong>作成日時</strong>
+    {{ article.created_at }}
+
+    {% if request.user == article.user %}
+    <a class="btn btn-primary" href="{% url 'article:article_update' article.pk %}">編集</a>
+    <a class="btn btn-primary" href="{% url 'article:article_delete' article.pk %}">削除</a>
+    {% endif %}
+</div>
+
+<p><a class="btn btn-primary" href="{% url 'article:comment_create' article.pk %}">コメントする</a></p>
+
+{% for comment in comments %}
+<div class="post-preview">
+    <h3 class="post-subtitle">{{ comment.comment | linebreaksbr }}</h3>
+<div>{{ comment.created_at}}</div>
+</div>
+<hr>
+{% endfor %}
+
+</div>
+</div>
+</div></article>
+
+
+
+{% endblock %}

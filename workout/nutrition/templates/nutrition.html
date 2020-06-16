@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titile %}栄養を計算{% endblock %}
+{% block add %}   
+ <!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<link href="{% static 'add.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block contents %}
+          {% if form %}
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-md-10 mx-auto">
+                  <p>ダイエットをしたい方向けにベストなカロリーを計算します</p>
+          <form method="POST">
+              {% csrf_token %}
+              {% for field in form %}
+              <p>
+              <label for="{{ field.id_for_label }}">
+              <strong>{{ field.label_tag }}</strong>
+              </label>
+              {{ field }}
+              </p>
+              {% endfor %}
+              <button type="submit" class="btn btn-primary">計算する</button>
+          </form>
+          </div></div></div>
+            {% else %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+            
+            <div class="add">あなたの基礎代謝は<span id="calory">{{ calory }}</span>キロカロリーです。</div>
+            <div hidden class="add">メンテナンスカロリーは<span id="maintenance">{{ maintenance }}</span>キロカロリーです。</div>
+            <div class="add">一日の目標摂取カロリーは<span id="diet">{{ diet }}</span>kcal</div>
+        
+            
+            <p>理想的な栄養バランスはこちら！</p>
+            <div class="add">タンパク質は<span id="protein">{{ protein }}</span>kcal  [{{ pro_g }}g]</div>
+                <div class="add">炭水化物(糖質)は<span id="carbo">{{ carbo }}</span>kcal  [{{ carbo_g }}g]</div>
+                    <div class="add">脂質は<span id="fat">{{ fat }}</span>kcal  [{{ fat_g }}g]</div>
+        </div></div></div>
+                  <!--カロリーグラフ -->
+       <div class="chart-container" style="position: absolute; top:600px;left:750px; height:15vh; width:20vw">
+        <canvas id="myChart"></canvas>
+        </div>     
+        <script>
+       var calory=Number(document.getElementById("calory").textContent);
+       var diet=Number(document.getElementById("diet").textContent);
+       var ctx = document.getElementById('myChart');
+       
+       var myChart = new Chart(ctx, {
+     type: 'bar',
+     data: {                                //◆データ
+             labels: ['基礎代謝','目標摂取カロリー'],     //ラベル名
+             datasets: [{                       //データ設定
+                 data: [calory,diet],          //データ内容
+                 backgroundColor: ['#FF570D', '#75A9FF']   //背景色
+             }]
+         },
+     options: {
+       legend: {                          //凡例設定
+                 display: false                 //表示設定
+            },
+ 
+         scales: {
+             yAxes: [{
+                 ticks: {
+                     beginAtZero: true
+                 }
+             }]
+         }
+ 
+         
+     }
+ });
+         </script>
+
+
+
+<!--栄養詳細グラフ -->
+<div class="chart-container" style="position: absolute; top:750px; left:650px; height:25vh; width:35vw">
+  <canvas id="radarChart"></canvas>
+</div>
+<script>
+var diet=Number(document.getElementById("diet").textContent);
+var protein=Number(document.getElementById("protein").textContent);
+var carbo=Number(document.getElementById("carbo").textContent);
+var fat=Number(document.getElementById("fat").textContent);
+
+var ctx = document.getElementById('radarChart');
+
+data ={
+datasets:[{
+         data:[protein,carbo,fat],
+         backgroundColor:'rgba(63, 114, 191, 0.79)',
+         borderColor:'rgba(12, 22, 38, 0.79)',
+         borderWidth:1,
+         pointHoverBorderWidth:2,
+         pointBackgroundColor: 'RGB(46,106,177)'
+}],
+labels:[
+ 'タンパク質',
+ '炭水化物',
+ '脂質'
+]
+
+};
+var myRadarChart = new Chart(ctx, {
+type: 'radar',
+data: data,
+options: {
+scale: {
+  // スケールを隠す。
+  display: true
+},
+legend: {
+      display: false
+   },
+}
+});
+
+</script>
+</p>
+            {% endif %}
+
+{% endblock %}
