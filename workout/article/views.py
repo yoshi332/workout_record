@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from .models import Article,Comment
 from django.views import generic
 from .forms import ArticleCreateForm,CommentCreateForm
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import Http404,JsonResponse
@@ -13,7 +13,7 @@ class ArticleListView(generic.ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        articles = Article.objects.all()
+        articles = Article.objects.all().order_by('-created_at')
         return articles
 
 def detail(request, pk):

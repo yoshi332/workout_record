@@ -1,17 +1,21 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}ログイン{% endblock %}
+
+{% block add %}   
+<link href="{% static 'css/list.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block contents %}
 <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-          <h1>ログイン</h1>
+          <h2>ログイン</h2>
           <form method="post" action="{% url 'account_login' %}">
               {% csrf_token %}
               {{ form.as_p }}
 
-              <p><a href="{% url 'account_signup' %}">サインアップはこちらから</a></p>
+              <p><a href="{% url 'account_signup' %}">会員登録はこちらから</a></p>
               <button class="btn btn-primary" type="submit">ログインする</button>
           </form>
 
